@@ -104,6 +104,10 @@
                        class="flex items-center gap-x-2 px-2 py-1.5 rounded-md text-[#37352F] hover:bg-white transition-colors {{ request()->is('my/reviews*') ? 'bg-white shadow-sm' : '' }}">
                         <i class="ph-bold ph-chat-circle-text text-[#6940A5]"></i> Riwayat Ulasan
                     </a>
+                    <a href="{{ url('/my/profile') }}"
+                       class="flex items-center gap-x-2 px-2 py-1.5 rounded-md text-[#37352F] hover:bg-white transition-colors {{ request()->is('my/profile*') ? 'bg-white shadow-sm' : '' }}">
+                        <i class="ph-bold ph-user-circle text-[#2383E2]"></i> Profil
+                    </a>
                 @endcan
             </nav>
 
