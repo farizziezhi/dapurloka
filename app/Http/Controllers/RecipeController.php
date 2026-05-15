@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Ai\Agents\RecipeDescriptionAgent;
 use App\Models\Flavor;
 use App\Models\Recipe;
 use Illuminate\Http\Request;
@@ -41,15 +42,32 @@ class RecipeController extends Controller
     // Halaman publik: detail satu resep
     public function show(Recipe $recipe): View
     {
-        // Pastikan hanya resep approved yang bisa diakses publik
         abort_if($recipe->status !== 'approved', 404);
 
-        // Load semua relasi yang dibutuhkan di halaman detail
         $recipe->load(['user', 'flavors', 'reviews.user']);
 
-        // Hitung rata-rata rating
         $avgRating = $recipe->reviews->avg('rating') ?? 0;
 
         return view('public.recipe-detail', compact('recipe', 'avgRating'));
+    }
+
+    // Generate deskripsi AI on-demand (dipanggil via POST button)
+    public function generateDescription(Recipe $recipe)
+    {
+        abort_if($recipe->status !== 'approved', 404);
+
+        $recipe->load('flavors');
+        $flavors = $recipe->flavors->pluck('name')->implode(', ');
+
+        try {
+            $response = RecipeDescriptionAgent::make()->prompt(
+                "Buatkan deskripsi untuk resep '{$recipe->title}' dengan bahan: {$recipe->ingredients}. Flavor: {$flavors}."
+            );
+            $aiDescription = trim($response->text);
+        } catch (\Throwable $e) {
+            return back()->with('error', 'Dapur AI sedang sibuk, coba lagi sebentar.');
+        }
+
+        return back()->with('aiDescription', $aiDescription);
     }
 }

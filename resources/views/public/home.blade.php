@@ -95,7 +95,7 @@
         @else
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 @foreach ($featuredRecipes as $recipe)
-                    <x-card-recipe :recipe="$recipe" href="#" />
+                    <x-card-recipe :recipe="$recipe" :href="route('recipes.show', $recipe)" />
                 @endforeach
             </div>
         @endif

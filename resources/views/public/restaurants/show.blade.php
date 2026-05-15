@@ -71,6 +71,66 @@
                     Ulasan ({{ $restaurant->reviews->count() }})
                 </h2>
 
+                {{-- Form tulis review (hanya untuk user login yang belum pernah review) --}}
+                @auth
+                    @php
+                        $alreadyReviewed = $restaurant->reviews->contains('user_id', auth()->id());
+                    @endphp
+
+                    @if (! $alreadyReviewed)
+                        <div class="bg-white border border-[#E9E9E7] rounded-md p-4 mb-6">
+                            <h3 class="text-sm font-semibold text-[#37352F] mb-3 flex items-center gap-x-2">
+                                <i class="ph-bold ph-pencil-simple text-[#2383E2]"></i> Tulis Ulasan
+                            </h3>
+
+                            <form method="POST" action="{{ route('restaurants.reviews.store', $restaurant) }}" class="space-y-3">
+                                @csrf
+
+                                {{-- Star rating input --}}
+                                <div>
+                                    <label class="block text-sm font-medium text-[#37352F] mb-1.5">Rating</label>
+                                    <div class="flex items-center gap-x-1" x-data="{ rating: 0, hover: 0 }">
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            <button type="button"
+                                                    onclick="document.getElementById('rating-input').value = {{ $i }}; this.parentElement.querySelectorAll('i').forEach((el, idx) => { el.className = idx < {{ $i }} ? 'ph-fill ph-star text-[#EAB308] text-xl cursor-pointer' : 'ph ph-star text-[#E9E9E7] text-xl cursor-pointer'; });"
+                                                    class="focus:outline-none">
+                                                <i class="ph ph-star text-[#E9E9E7] text-xl cursor-pointer"></i>
+                                            </button>
+                                        @endfor
+                                        <input type="hidden" name="rating" id="rating-input" value="{{ old('rating', 0) }}">
+                                    </div>
+                                    @error('rating')
+                                        <p class="mt-1 text-xs text-[#EB5757]">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                {{-- Comment --}}
+                                <div>
+                                    <label for="comment" class="block text-sm font-medium text-[#37352F] mb-1.5">Komentar <span class="text-[#73726E] text-xs">(opsional)</span></label>
+                                    <textarea id="comment" name="comment" rows="3"
+                                              class="w-full border border-[#E9E9E7] rounded-md px-3 py-2 text-sm text-[#37352F] placeholder-[#73726E] focus:outline-none focus:border-[#2383E2] focus:ring-2 focus:ring-[#2383E2]/20 transition-all"
+                                              placeholder="Ceritakan pengalamanmu di restoran ini...">{{ old('comment') }}</textarea>
+                                </div>
+
+                                <button type="submit"
+                                        class="inline-flex items-center gap-x-1.5 bg-[#2383E2] text-white px-3 py-1.5 rounded-md text-sm font-medium hover:bg-blue-600 transition-colors">
+                                    <i class="ph-bold ph-paper-plane-tilt"></i> Kirim Ulasan
+                                </button>
+                            </form>
+                        </div>
+                    @else
+                        <div class="bg-[#F7F7F5] border border-[#E9E9E7] rounded-md px-4 py-3 mb-6 text-sm text-[#73726E] flex items-center gap-x-2">
+                            <i class="ph-fill ph-check-circle text-[#0F7B6C]"></i>
+                            Kamu sudah memberikan ulasan untuk restoran ini.
+                        </div>
+                    @endif
+                @else
+                    <div class="bg-[#F7F7F5] border border-[#E9E9E7] rounded-md px-4 py-3 mb-6 text-sm text-[#73726E] flex items-center gap-x-2">
+                        <i class="ph ph-sign-in text-[#2383E2]"></i>
+                        <a href="{{ route('login') }}" class="text-[#2383E2] hover:underline">Masuk</a> untuk memberikan ulasan.
+                    </div>
+                @endauth
+
                 @if ($restaurant->reviews->isEmpty())
                     <div class="flex flex-col items-center justify-center py-12 text-[#73726E] text-sm">
                         <i class="ph-duotone ph-chat-circle-dots text-4xl text-[#E9E9E7] mb-2"></i>
@@ -89,7 +149,21 @@
                                             {{ $review->user->name ?? 'Anonim' }}
                                         </span>
                                     </div>
-                                    <x-star-rating :rating="$review->rating" />
+                                    <div class="flex items-center gap-x-2">
+                                        <x-star-rating :rating="$review->rating" />
+                                        @auth
+                                            @if ($review->user_id === auth()->id())
+                                                <form method="POST" action="{{ route('restaurants.reviews.destroy', [$restaurant, $review]) }}"
+                                                      onsubmit="return confirm('Hapus ulasan ini?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-[#EB5757] hover:bg-red-50 px-1.5 py-0.5 rounded text-xs transition-colors">
+                                                        <i class="ph ph-trash"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        @endauth
+                                    </div>
                                 </div>
                                 @if ($review->comment)
                                     <p class="text-sm text-[#37352F]/80 leading-relaxed">{{ $review->comment }}</p>

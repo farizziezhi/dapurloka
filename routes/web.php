@@ -9,6 +9,8 @@ use App\Http\Controllers\UserRecipeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\RestaurantController;
+use App\Http\Controllers\RestaurantReviewController;
+use App\Http\Controllers\RecipeReviewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,9 +21,19 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('/ai/suggest', [HomeController::class, 'aiSuggest'])->name('ai.suggest');
 Route::get('/recipes', [RecipeController::class, 'index'])->name('recipes.index');
 Route::get('/recipes/{recipe}', [RecipeController::class, 'show'])->name('recipes.show');
+Route::post('/recipes/{recipe}/ai-description', [RecipeController::class, 'generateDescription'])->name('recipes.ai-description');
 
 Route::get('/restaurants', [RestaurantController::class, 'index'])->name('restaurants.index');
 Route::get('/restaurants/{restaurant}', [RestaurantController::class, 'show'])->name('restaurants.show');
+
+// Restaurant reviews (auth required)
+Route::middleware('auth')->group(function () {
+    Route::post('/restaurants/{restaurant}/reviews', [RestaurantReviewController::class, 'store'])->name('restaurants.reviews.store');
+    Route::delete('/restaurants/{restaurant}/reviews/{review}', [RestaurantReviewController::class, 'destroy'])->name('restaurants.reviews.destroy');
+
+    Route::post('/recipes/{recipe}/reviews', [RecipeReviewController::class, 'store'])->name('recipes.reviews.store');
+    Route::delete('/recipes/{recipe}/reviews/{review}', [RecipeReviewController::class, 'destroy'])->name('recipes.reviews.destroy');
+});
 
 /*
 |--------------------------------------------------------------------------
