@@ -8,6 +8,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserRecipeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RecipeController;
+use App\Http\Controllers\RestaurantController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +18,9 @@ use App\Http\Controllers\RecipeController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('/ai/suggest', [HomeController::class, 'aiSuggest'])->name('ai.suggest');
 Route::get('/recipes', [RecipeController::class, 'index'])->name('recipes.index');
+
+Route::get('/restaurants', [RestaurantController::class, 'index'])->name('restaurants.index');
+Route::get('/restaurants/{restaurant}', [RestaurantController::class, 'show'])->name('restaurants.show');
 
 /*
 |--------------------------------------------------------------------------

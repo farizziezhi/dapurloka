@@ -19,14 +19,19 @@
             </a>
 
             <nav class="hidden md:flex items-center gap-x-1 text-sm">
-                <a href="{{ route('recipes.index') }}" class="inline-flex items-center gap-x-1.5 px-2.5 py-1.5 rounded-md text-[#73726E] hover:bg-[#F7F7F5] hover:text-[#37352F] transition-colors">
+                <a href="{{ route('recipes.index') }}"
+                   class="inline-flex items-center gap-x-1.5 px-2.5 py-1.5 rounded-lg transition-colors
+                          {{ request()->routeIs('recipes.*')
+                              ? 'bg-blue-50 text-blue-600'
+                              : 'text-[#73726E] hover:bg-[#F7F7F5] hover:text-[#37352F]' }}">
                     <i class="ph ph-bowl-food"></i> Resep
                 </a>
-                <a href="#" class="inline-flex items-center gap-x-1.5 px-2.5 py-1.5 rounded-md text-[#73726E] hover:bg-[#F7F7F5] hover:text-[#37352F] transition-colors">
+                <a href="{{ route('restaurants.index') }}"
+                   class="inline-flex items-center gap-x-1.5 px-2.5 py-1.5 rounded-lg transition-colors
+                          {{ request()->routeIs('restaurants.*')
+                              ? 'bg-blue-50 text-blue-600'
+                              : 'text-[#73726E] hover:bg-[#F7F7F5] hover:text-[#37352F]' }}">
                     <i class="ph ph-storefront"></i> Restoran
-                </a>
-                <a href="#" class="inline-flex items-center gap-x-1.5 px-2.5 py-1.5 rounded-md text-[#73726E] hover:bg-[#F7F7F5] hover:text-[#37352F] transition-colors">
-                    <i class="ph ph-tag"></i> Flavor
                 </a>
             </nav>
 

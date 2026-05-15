@@ -82,7 +82,7 @@
                     <p class="text-sm text-[#73726E]">Resep terbaru yang sudah disetujui komunitas.</p>
                 </div>
             </div>
-            <a href="#" class="inline-flex items-center gap-x-1 text-sm text-[#2383E2] hover:underline">
+            <a href="{{ route('recipes.index') }}" class="inline-flex items-center gap-x-1 text-sm text-[#2383E2] hover:underline">
                 Lihat semua <i class="ph-bold ph-arrow-right"></i>
             </a>
         </div>
@@ -113,7 +113,7 @@
                     <p class="text-sm text-[#73726E]">Tempat makan yang kami rekomendasikan.</p>
                 </div>
             </div>
-            <a href="#" class="inline-flex items-center gap-x-1 text-sm text-[#2383E2] hover:underline">
+            <a href="{{ route('restaurants.index') }}" class="inline-flex items-center gap-x-1 text-sm text-[#2383E2] hover:underline">
                 Lihat semua <i class="ph-bold ph-arrow-right"></i>
             </a>
         </div>
@@ -126,7 +126,7 @@
         @else
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 @foreach ($topRestaurants as $restaurant)
-                    <x-card-restaurant :restaurant="$restaurant" href="#" />
+                    <x-card-restaurant :restaurant="$restaurant" :href="route('restaurants.show', $restaurant)" />
                 @endforeach
             </div>
         @endif
