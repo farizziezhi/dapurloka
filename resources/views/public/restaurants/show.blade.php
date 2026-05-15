@@ -8,7 +8,7 @@
     <div class="mb-6">
         <a href="{{ route('restaurants.index') }}"
            class="inline-flex items-center gap-x-1.5 text-sm text-[#73726E] hover:text-[#37352F] transition-colors">
-            <i class="ph-bold ph-arrow-left"></i> Kembali ke daftar
+            <i class="ph-bold ph-arrow-left relative top-[2px]"></i> Kembali ke daftar
         </a>
     </div>
 

@@ -24,10 +24,11 @@ class RecipeController extends Controller
             $query->where('title', 'like', '%' . $request->search . '%');
         }
 
-        // Filter berdasarkan flavor
-        if ($request->filled('flavor')) {
-            $query->whereHas('flavors', function ($q) use ($request) {
-                $q->where('flavors.id', $request->flavor);
+        // Filter berdasarkan flavor (multiple)
+        if ($request->filled('flavors')) {
+            $flavorIds = (array) $request->flavors;
+            $query->whereHas('flavors', function ($q) use ($flavorIds) {
+                $q->whereIn('flavors.id', $flavorIds);
             });
         }
 
