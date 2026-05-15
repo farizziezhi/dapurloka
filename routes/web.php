@@ -18,6 +18,7 @@ use App\Http\Controllers\RestaurantController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('/ai/suggest', [HomeController::class, 'aiSuggest'])->name('ai.suggest');
 Route::get('/recipes', [RecipeController::class, 'index'])->name('recipes.index');
+Route::get('/recipes/{recipe}', [RecipeController::class, 'show'])->name('recipes.show');
 
 Route::get('/restaurants', [RestaurantController::class, 'index'])->name('restaurants.index');
 Route::get('/restaurants/{restaurant}', [RestaurantController::class, 'show'])->name('restaurants.show');
