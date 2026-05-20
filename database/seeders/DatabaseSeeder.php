@@ -32,6 +32,15 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+        User::updateOrCreate(
+            ['email' => 'farizzi@dapurloka.test'],
+            [
+                'name' => 'Farizzi',
+                'password' => Hash::make('password'),
+                'role' => 'user',
+            ]
+        );
+
         $this->call([
             FlavorSeeder::class,
             RestaurantSeeder::class,
